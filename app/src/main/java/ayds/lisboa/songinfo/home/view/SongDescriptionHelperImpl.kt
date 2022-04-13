@@ -25,7 +25,7 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
         }
     }
 
-    fun getSongReleaseDateDescription(song: Song): String {
+    private fun getSongReleaseDateDescription(song: Song): String {
         return when (song.releaseDatePrecision) {
             "day" -> getSongReleaseDateByDay(song.releaseDate)
             "month" -> getSongReleaseDateByMonth(song.releaseDate)
@@ -41,7 +41,7 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
         val day = releaseDateAsList[2]
         return "$day/$month/$year"
     }
-
+    
     private fun getSongReleaseDateByMonth(releaseDate: String): String {
         val releaseDateAsList : List<String> = releaseDate.split("-")
         val year = releaseDateAsList[0]

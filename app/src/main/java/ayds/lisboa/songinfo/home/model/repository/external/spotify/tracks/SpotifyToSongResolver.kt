@@ -1,6 +1,5 @@
 package ayds.lisboa.songinfo.home.model.repository.external.spotify.tracks
 
-import android.util.Log
 import com.google.gson.Gson
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
 import com.google.gson.JsonObject
@@ -27,7 +26,6 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
     override fun getSongFromExternalData(serviceData:    String?): SpotifySong? =
         try {
             serviceData?.getFirstItem()?.let { item ->
-                Log.d("TAG", item.toString())
                 SpotifySong(
                   item.getId(), item.getSongName(), item.getArtistName(), item.getAlbumName(),
                   item.getReleaseDate(), item.getSpotifyUrl(), item.getImageUrl(), releaseDatePrecision = item.getReleaseDatePrecision()
@@ -77,5 +75,4 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         val album = this[ALBUM].asJsonObject
         return album[RELEASE_DATE_PRECISION].asString
     }
-
 }

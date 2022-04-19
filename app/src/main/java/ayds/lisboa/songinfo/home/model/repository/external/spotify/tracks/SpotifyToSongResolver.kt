@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.home.model.repository.external.spotify.tracks
 
 import com.google.gson.Gson
 import ayds.lisboa.songinfo.home.model.entities.SpotifySong
+import ayds.lisboa.songinfo.home.model.entities.ReleaseDatePrecision
 import com.google.gson.JsonObject
 
 interface SpotifyToSongResolver {
@@ -23,12 +24,12 @@ private const val RELEASE_DATE_PRECISION = "release_date_precision"
 
 internal class JsonToSongResolver : SpotifyToSongResolver {
 
-    override fun getSongFromExternalData(serviceData:    String?): SpotifySong? =
+    override fun getSongFromExternalData(serviceData: String?): SpotifySong? =
         try {
             serviceData?.getFirstItem()?.let { item ->
                 SpotifySong(
                   item.getId(), item.getSongName(), item.getArtistName(), item.getAlbumName(),
-                  item.getReleaseDate(), item.getSpotifyUrl(), item.getImageUrl(), releaseDatePrecision = item.getReleaseDatePrecision()
+                  item.getReleaseDate(), item.getSpotifyUrl(), item.getImageUrl(), item.getReleaseDatePrecision()
                 )
             }
         } catch (e: Exception) {
@@ -71,8 +72,13 @@ internal class JsonToSongResolver : SpotifyToSongResolver {
         return externalUrl[SPOTIFY].asString
     }
 
-    private fun JsonObject.getReleaseDatePrecision(): String {
+    private fun JsonObject.getReleaseDatePrecision(): ReleaseDatePrecision {
         val album = this[ALBUM].asJsonObject
-        return album[RELEASE_DATE_PRECISION].asString
+        return when (album[RELEASE_DATE_PRECISION].asString){
+            "day" -> ReleaseDatePrecision.DAY
+            "month" -> ReleaseDatePrecision.MONTH
+            "year" -> ReleaseDatePrecision.YEAR
+            else -> ReleaseDatePrecision.NONE
+        }
     }
 }
